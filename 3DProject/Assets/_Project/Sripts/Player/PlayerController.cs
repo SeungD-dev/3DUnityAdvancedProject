@@ -28,6 +28,11 @@ namespace Platformer
         [SerializeField] float jumpMaxHeight = 2f;
         [SerializeField] float gravityMultiplier = 3f;
 
+        [Header("Attack Settings")]
+        [SerializeField] float attackCooldown = 0.5f;
+        [SerializeField] float attackDistance = 1f;
+        [SerializeField] int attackDamage = 10;
+
         Transform mainCam;
 
         const float ZeroF = 0f;
@@ -40,9 +45,12 @@ namespace Platformer
         List<Timer> timers;
         CountdownTimer jumpTimer;
         CountdownTimer jumpCooldownTimer;
+        CountdownTimer attackTimer;
 
         //Animator parameters
         static readonly int Speed = Animator.StringToHash("Speed");
+        static readonly int JumpTime = Animator.StringToHash("JumpTime");
+        
 
         private void Awake()
         {
@@ -66,11 +74,34 @@ namespace Platformer
         private void OnEnable()
         {
             input.Jump += OnJump;
+            input.Attack += OnAttack;
+            
         }
 
         private void OnDisable()
         {
             input.Jump -= OnJump;
+            input.Attack -= OnAttack;
+            
+        }
+
+        void OnAttack()
+        {
+            if(!attackTimer.IsRunning)
+            {
+                attackTimer.Start();
+            }
+        }
+
+        public void Attack()
+        {
+            Vector3 attackPos = transform.position + transform.forward;
+            Collider[] hitEnemies = Physics.OverlapSphere(attackPos, attackDistance);
+
+            foreach(var enemy in hitEnemies)
+            {
+                Debug.Log(enemy.name);
+            }
         }
 
         void OnJump(bool performed)
@@ -79,10 +110,12 @@ namespace Platformer
             {
                 jumpTimer.Start();
                 jumpVelocity = jumpForce;
+                animator.SetBool("IsJumping", true);
             }
             else if(!performed && jumpTimer.IsRunning)
             {
                 jumpTimer.Stop();
+                animator.SetBool("IsJumping", false);
             }
         }
 
@@ -104,6 +137,7 @@ namespace Platformer
         private void UpdateAnimator()
         {
             animator.SetFloat(Speed, currentSpeed);
+            animator.SetFloat(JumpTime, jumpCooldown);
         }
 
         void HandleTimers()

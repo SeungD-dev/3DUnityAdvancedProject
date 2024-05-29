@@ -4,13 +4,13 @@ namespace Platformer
 {
     public class PlatformCollisionHandler : MonoBehaviour 
     {
-        Transform platform; //The platform, if any, we are on top of
+        Transform platform; //오브젝트가 서 있을 플랫폼
 
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.CompareTag("MovingPlatform"))
             {
-                //If the contact noraml is pointing up, we've collided with the top of the platform
+                //만약 contact.normal이 위를 가리키고 있다면 플랫폼 윗 부분과 충돌한 것
                 ContactPoint contact = collision.GetContact(0);
                 if (contact.normal.y < 0.5f) return;
 
