@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace Platformer
 {
-public class Setup
+    public class Setup
     {
         [MenuItem("Tools/Setup/Create Default Folders")]
         public static void CreateDefaultFolders()
@@ -30,5 +30,6 @@ public class Setup
                 }
             }
         }
+    
     }
 }
