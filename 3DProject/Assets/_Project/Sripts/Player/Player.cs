@@ -8,16 +8,16 @@ namespace Platformer
     public class Player : MonoBehaviour
     {
        public PlayerController controller;
-        //public PlayerStatus status;
+        public PlayerStatus status;
 
         //public ItemData itemData;
-        public Action addItem;
+        //public Action addItem;
 
         private void Awake()
         {
             CharacterManager.Instance.player = this;
             controller = GetComponent<PlayerController>();
-            //status
+            status = GetComponent<PlayerStatus>();
         }
 
     }

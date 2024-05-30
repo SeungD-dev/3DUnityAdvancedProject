@@ -14,6 +14,7 @@ namespace Platformer
         public event UnityAction EnableMouseControlCamera = delegate { };
         public event UnityAction DisableMouseControlCamera = delegate { };
         public event UnityAction<bool> Jump = delegate { };
+        public event UnityAction<bool> Dash = delegate { };
         public event UnityAction Attack = delegate { };
 
         PlayerInputActions inputActions;
@@ -35,9 +36,21 @@ namespace Platformer
             inputActions.Enable();
         }
 
+        public void OnMove(InputAction.CallbackContext context)
+        {
+            Move.Invoke(context.ReadValue<Vector2>());
+        }
+
+        public void OnLook(InputAction.CallbackContext context)
+        {
+            Look.Invoke(context.ReadValue<Vector2>(), IsDeviceMouse(context));
+        }
+
+        bool IsDeviceMouse(InputAction.CallbackContext context) => context.control.device.name == "Mouse";
+
         public void OnFire(InputAction.CallbackContext context)
         {
-            if(context.phase == InputActionPhase.Started)
+            if (context.phase == InputActionPhase.Started)
             {
                 Attack.Invoke();
             }
@@ -56,14 +69,6 @@ namespace Platformer
             }
         }
 
-        public void OnLook(InputAction.CallbackContext context)
-        {
-            Look.Invoke(context.ReadValue<Vector2>(),IsDeviceMouse(context));
-        }
-
-        bool IsDeviceMouse(InputAction.CallbackContext context) => context.control.device.name == "Mouse";
-       
-
         public void OnMouseControlCamera(InputAction.CallbackContext context)
         {
             switch (context.phase)
@@ -77,14 +82,18 @@ namespace Platformer
             }
         }
 
-        public void OnMove(InputAction.CallbackContext context)
-        {
-            Move.Invoke(context.ReadValue<Vector2>());
-        }
+        
 
         public void OnRun(InputAction.CallbackContext context)
         {
-            
+            switch(context.phase)
+            {
+                case InputActionPhase.Started:
+                    Dash.Invoke(true); break;
+                    case InputActionPhase.Canceled:
+                    Dash.Invoke(false); break;
+            }
         }
+        
     }
 }
