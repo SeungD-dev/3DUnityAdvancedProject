@@ -1,21 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Platformer
 {
-    public class UI_Stamina : MonoBehaviour, IListener
+    public class UI_Stamina : MonoBehaviour
     {
-        [SerializeField] private Conditions stamina;
+        [SerializeField] Image staminaBar;
+        [SerializeField] FloatEventChannel playerStaminaChannel;
 
-        void Start()
+
+        public void UpdateStaminaBar(float amount)
         {
-            EventManager.Instance.AddListener(EventType.eStaminaChange, this);
+            StartCoroutine(DecreaseStaminaBar(amount));
         }
 
-        public void OnEvent(EventType EventType, Component Sender, object Param = null)
+        IEnumerator RestoreStaminaBar(float amount)
         {
-            
+            yield return new WaitForSeconds(amount);
+        }
+
+        IEnumerator DecreaseStaminaBar(float amount)
+        {
+            while (staminaBar.fillAmount > amount)
+            {
+                staminaBar.fillAmount -= Time.deltaTime * amount;
+                yield return null;
+            }
         }
     }
 }

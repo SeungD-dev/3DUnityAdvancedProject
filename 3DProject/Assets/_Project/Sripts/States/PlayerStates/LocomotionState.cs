@@ -18,7 +18,7 @@ namespace Platformer
 
         public override void FixedUpdate()
         {
-            //call Players's move logic
+            
             player.HandleMovement();
         }
     }

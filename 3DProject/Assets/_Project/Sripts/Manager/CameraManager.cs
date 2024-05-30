@@ -39,10 +39,10 @@ namespace Platformer
 
             if (isDeviceMouse && !isRMBPressed) return;
 
-            //If the device is mouse use fixedDeltaTime, otherwise use deltaTime
+            //만약 device가 마우스면 fixedDeltaTime을 사용하고, 아니면 deltaTime을 사용
             float deviceMultiplier = isDeviceMouse ? Time.fixedDeltaTime : Time.deltaTime;
 
-            //Set the camera axis values
+            //카메라의 축 설정
             freeLookVCam.m_XAxis.m_InputAxisValue = cameraMovement.x * speedMuliplier * deviceMultiplier;
             freeLookVCam.m_YAxis.m_InputAxisValue = cameraMovement.y * speedMuliplier * deviceMultiplier;
         }
@@ -51,7 +51,7 @@ namespace Platformer
         {
             isRMBPressed = true;
 
-            //Lock the cursor to the center of the screen and hide it
+            //우클릭 시 커서 가리고 잠그기
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
@@ -62,11 +62,11 @@ namespace Platformer
         {
             isRMBPressed = false;
 
-            //UnLock the cursor and make it visible
+            
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            //Reset the camera axis to prevent jumping when re-enabling mouse control
+            
             freeLookVCam.m_XAxis.m_InputAxisValue = 0f;
             freeLookVCam.m_YAxis.m_InputAxisValue = 0f;
         }

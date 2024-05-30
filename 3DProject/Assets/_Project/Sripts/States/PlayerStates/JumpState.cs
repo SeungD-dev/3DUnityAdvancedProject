@@ -19,7 +19,8 @@ namespace Platformer
 
         public override void FixedUpdate()
         {
-            //call Player's jump logic and move logic
+            
+            //플레이어 점프와 움직임 로직 호출
             player.HandleJump();
             player.HandleMovement();
         }

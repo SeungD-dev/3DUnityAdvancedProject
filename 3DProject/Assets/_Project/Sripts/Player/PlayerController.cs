@@ -59,11 +59,12 @@ namespace Platformer
         static readonly int JumpTime = Animator.StringToHash("JumpTime");
 
         StateMachine stateMachine;
-        PlayerStatus playerStatus;
+        Stamina stamina;
+        UI_Stamina UIstamina;
 
         private void Awake()
         {
-            playerStatus = GetComponent<PlayerStatus>();
+            stamina = GetComponent<Stamina>();
             mainCam = Camera.main.transform;
             freeLookVCam.Follow = transform;
             freeLookVCam.LookAt = transform;
@@ -193,6 +194,8 @@ namespace Platformer
             if (performed && !dashTimer.IsRunning && !dashCooldownTimer.IsRunning)
             {
                dashTimer.Start();
+
+
             }
             else if (!performed && dashTimer.IsRunning)
             {
@@ -205,9 +208,10 @@ namespace Platformer
         {
             movement = new Vector3(input.Direction.x, 0f, input.Direction.y);
             stateMachine.Update();
-
+            
             HandleTimers();
             UpdateAnimator();
+
         }
 
         private void FixedUpdate()
@@ -231,7 +235,8 @@ namespace Platformer
 
         public void HandleJump()
         {
-            //If not jumping and grounded, keep jump velocity at 0
+            
+            //점프 상태가 아니고 착지 상태가 아니라면, 점프 속도 0
             if(!jumpTimer.IsRunning && groundChecker.IsGrounded)
             {
                 jumpVelocity = ZeroF;
@@ -239,14 +244,16 @@ namespace Platformer
                 return;
             }
 
-            //If jumping or falling calcualte velocity
+            
+            //점프 중이거나 떨어지는 상태일 때 속도 계산
             if(!jumpTimer.IsRunning)
             {
-                //Gravity takes over
+                
                 jumpVelocity += Physics.gravity.y * gravityMultiplier * Time.fixedDeltaTime;
             }
 
-            //Apply velocity
+            
+            //속도 적용
             rb.velocity = new Vector3(rb.velocity.x, jumpVelocity, rb.velocity.z);
         }
 
@@ -254,7 +261,8 @@ namespace Platformer
         {
             
             
-            //Rotate movement direction to match camera rotation
+            
+            //움직임 방향과 카메라 회전 일치
             var adjustedDirection = Quaternion.AngleAxis(mainCam.eulerAngles.y, Vector3.up) * movement;
 
             if(adjustedDirection.magnitude > ZeroF)
@@ -269,21 +277,23 @@ namespace Platformer
             {
                SmoothSpeed(ZeroF);
 
-                //Reset horizontal velocity for a snappy stop
+                
+                //좀 더 깔끔한 정지를 위해 수평 속도 리셋 
                 rb.velocity = new Vector3(ZeroF,rb.velocity.y,ZeroF);
             }
         }
 
         private void HandleHorizontalMovement(Vector3 adjustedDirection)
         {
-            //Move the Player
+            //플레이어 움직임
            Vector3 velocity = adjustedDirection * moveSpeed *dashVelocity* Time.fixedDeltaTime;
             rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
         }
 
         private void HandleRotation(Vector3 adjustedDirection)
         {
-            //Adjust rotation to match movement direction
+            
+            //움직이는 방향과 회전 방향 동일시
             var targetRotation = Quaternion.LookRotation(adjustedDirection);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             transform.LookAt(transform.position + adjustedDirection);
