@@ -15,7 +15,7 @@
 <br/> 플레이어가 달리기를 해도 UI에 줄어드는 스태미나가 업데이트되지 않음
 <br/> 점프를 하고 착지를 했을 때 다시 점프가 되지 않거나 끼는 현상
 
-#### 프로젝트 목적 : StateMachine, Observer 디자인 패턴 등을 적용하여 간단한 3D 플랫포머 구현
+#### 프로젝트 목적 : StateMachine을 통한 애니메이션, Observer 디자인 패턴 등을 적용하여 간단한 3D 플랫포머 구현, Cinemachine을 이용한 카메라 세팅
 
 
 참고 영상 :  https://www.youtube.com/watch?v=--_CH5DYz0M&t=216
